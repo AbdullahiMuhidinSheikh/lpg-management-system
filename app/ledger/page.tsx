@@ -48,7 +48,7 @@ export default function CylinderLedger() {
         body: JSON.stringify({
           clientId: selectedClient.id,
           cylinderSizeId: parseInt(emptyReturnForm.cylinderSizeId),
-          emptyQuantity: parseInt(emptyReturnForm.quantity)
+          emptyQuantity: typeof emptyReturnForm.quantity === 'string' ? parseInt(emptyReturnForm.quantity) : emptyReturnForm.quantity
         })
       })
 

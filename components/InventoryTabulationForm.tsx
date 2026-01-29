@@ -11,7 +11,7 @@ export function InventoryTabulationForm({ cylinderSizes, onTabulated }: Inventor
   const [inventory, setInventory] = useState<Record<number, { full: number; empty: number }>>({})
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [messageType, setMessageType] = useState<'success' | 'error'>('')
+  const [messageType, setMessageType] = useState<'success' | 'error' | null>(null)
 
   useEffect(() => {
     // Initialize form with all cylinder sizes

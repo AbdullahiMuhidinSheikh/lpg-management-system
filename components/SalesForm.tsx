@@ -61,7 +61,7 @@ export function SalesForm({ onSubmit, clients, cylinderSizes, isLoading = false 
       await onSubmit({
         ...form,
         cylinderSizeId: parseInt(form.cylinderSizeId),
-        quantity: parseInt(form.quantity)
+        quantity: typeof form.quantity === 'string' ? parseInt(form.quantity) : form.quantity
       })
       setSuccess('Sale recorded successfully!')
       setForm({ clientName: '', cylinderSizeId: '', quantity: 1, notes: '', deliveryType: 'DELIVERY', paymentStatus: 'PAID' })

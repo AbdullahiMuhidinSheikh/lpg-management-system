@@ -6,11 +6,17 @@ import { ExpenseForm } from '@/components/ExpenseForm'
 import { InventoryTabulationForm } from '@/components/InventoryTabulationForm'
 import { Table } from '@/components/Table'
 
+interface CylinderSize {
+  id: number
+  label: string
+  kg: number
+}
+
 export default function Dashboard() {
-  const [clients, setClients] = useState([])
-  const [cylinderSizes, setCylinderSizes] = useState([])
-  const [inventory, setInventory] = useState([])
-  const [recentSales, setRecentSales] = useState([])
+  const [clients, setClients] = useState<any[]>([])
+  const [cylinderSizes, setCylinderSizes] = useState<CylinderSize[]>([])
+  const [inventory, setInventory] = useState<any[]>([])
+  const [recentSales, setRecentSales] = useState<any[]>([])
   const [eodReport, setEodReport] = useState<any>(null)
   const [isLoadingEOD, setIsLoadingEOD] = useState(false)
   const [activeTab, setActiveTab] = useState('sales')
@@ -34,7 +40,7 @@ export default function Dashboard() {
         // Extract unique cylinder sizes from inventory
         const sizes = inv.map((i: any) => i.cylinderSize)
         // Remove duplicates by id
-        const uniqueSizes = Array.from(new Map(sizes.map((s: any) => [s.id, s])).values())
+        const uniqueSizes = Array.from(new Map(sizes.map((s: any) => [s.id, s])).values()) as CylinderSize[]
         setCylinderSizes(uniqueSizes)
       })
       .catch(console.error)

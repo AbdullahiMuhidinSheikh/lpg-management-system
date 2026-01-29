@@ -3,9 +3,17 @@
 import React, { useState, useEffect } from 'react'
 import { Table } from '@/components/Table'
 
+interface SupplierStats {
+  name: string
+  totalPurchases: number
+  totalCost: number
+  avgPricePerKg: string
+  bySize: Record<string, any>
+}
+
 export default function SupplierPriceTrends() {
   const [purchases, setPurchases] = useState([])
-  const [supplierStats, setSupplierStats] = useState<any>({})
+  const [supplierStats, setSupplierStats] = useState<Record<string, SupplierStats>>({})
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -60,7 +68,7 @@ export default function SupplierPriceTrends() {
   }
 
   // Find cheapest supplier overall
-  const cheapestSupplier = Object.values(supplierStats).reduce((cheapest: any, current: any) => {
+  const cheapestSupplier: SupplierStats | null = Object.values(supplierStats).reduce((cheapest: SupplierStats | null, current: SupplierStats) => {
     if (!cheapest || parseFloat(current.avgPricePerKg) < parseFloat(cheapest.avgPricePerKg)) {
       return current
     }
