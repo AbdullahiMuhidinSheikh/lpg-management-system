@@ -3,16 +3,8 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "env": [
-    {
-      "key": "DATABASE_URL",
-      "description": "Database connection string (use Supabase PostgreSQL URL)",
-      "value": "file:./dev.db"
-    },
-    {
-      "key": "AI_BACKEND_URL",
-      "description": "AI backend server URL",
-      "value": "http://localhost:5000"
-    }
-  ]
+  "env": {
+    "DATABASE_URL": "file:./dev.db",
+    "AI_BACKEND_URL": "http://localhost:5000"
+  }
 }
