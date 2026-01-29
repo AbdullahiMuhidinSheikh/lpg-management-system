@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LPG Inventory & Debt Management System
 
 A comprehensive Next.js (App Router) application for managing LPG cylinder inventory, sales, client debts, and supplier purchases. Built with Tailwind CSS, Prisma, and Supabase/PostgreSQL.
@@ -418,3 +419,7 @@ This system is built as a complete starter for LPG/gas distribution businesses. 
 ---
 
 **Happy selling! 🏮📊**
+=======
+# lpg-management-system
+Intelligent LPG management system
+>>>>>>> 4baf4ea2e257e1429866abcad7b6f92dafc5273e
