@@ -10,6 +10,7 @@ interface SalesFormProps {
 }
 
 export function SalesForm({ onSubmit, clients, cylinderSizes, isLoading = false }: SalesFormProps) {
+  const safeCylinderSizes = Array.isArray(cylinderSizes) ? cylinderSizes : []
   const [form, setForm] = useState({
     clientName: '',
     cylinderSizeId: '',
@@ -39,13 +40,13 @@ export function SalesForm({ onSubmit, clients, cylinderSizes, isLoading = false 
 
   useEffect(() => {
     // Calculate total price based on cylinder size and price per kg
-    const selectedSize = cylinderSizes.find((cs) => cs.id === parseInt(form.cylinderSizeId))
+    const selectedSize = safeCylinderSizes.find((cs) => cs.id === parseInt(form.cylinderSizeId))
     if (selectedSize && pricePerKg > 0) {
       setTotalPrice(selectedSize.kg * pricePerKg * form.quantity)
     } else {
       setTotalPrice(0)
     }
-  }, [form.cylinderSizeId, form.quantity, pricePerKg, cylinderSizes])
+  }, [form.cylinderSizeId, form.quantity, pricePerKg, safeCylinderSizes])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,7 +100,7 @@ export function SalesForm({ onSubmit, clients, cylinderSizes, isLoading = false 
             className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
           >
             <option value="">-- Select --</option>
-            {cylinderSizes.map((cs) => (
+            {safeCylinderSizes.map((cs) => (
               <option key={cs.id} value={cs.id}>
                 {cs.label}
               </option>
@@ -164,7 +165,7 @@ export function SalesForm({ onSubmit, clients, cylinderSizes, isLoading = false 
           <p className="text-sm text-slate-600">Cylinder Weight</p>
           <p className="text-lg font-semibold text-slate-900">
             {form.cylinderSizeId
-              ? cylinderSizes.find((cs) => cs.id === parseInt(form.cylinderSizeId))?.kg || 0
+              ? safeCylinderSizes.find((cs) => cs.id === parseInt(form.cylinderSizeId))?.kg || 0
               : 0}{' '}
             kg
           </p>

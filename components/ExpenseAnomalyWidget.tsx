@@ -33,7 +33,8 @@ export function ExpenseAnomalyWidget() {
     try {
       // Fetch expenses from API
       const expensesRes = await fetch('/api/expenses');
-      const expenses = await expensesRes.json();
+      const rawExpenses = await expensesRes.json();
+      const expenses = Array.isArray(rawExpenses) ? rawExpenses : [];
       
       // Format expenses for AI backend
       const formattedExpenses = expenses.map((exp: any) => ({
@@ -97,11 +98,11 @@ export function ExpenseAnomalyWidget() {
             </div>
           </div>
 
-          {anomalies.anomalies.length > 0 && (
+          {(anomalies.anomalies || []).length > 0 && (
             <div className="mt-4">
               <h3 className="font-semibold text-red-800 mb-2">Flagged Expenses:</h3>
               <div className="space-y-2">
-                {anomalies.anomalies.map((anom) => (
+                {(anomalies.anomalies || []).map((anom) => (
                   <div key={anom.index} className="bg-red-50 p-3 rounded border border-red-200">
                     <p className="font-semibold text-red-900">
                       {anom.date} - {anom.category}

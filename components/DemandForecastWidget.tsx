@@ -32,11 +32,12 @@ interface DemandForecastWidgetProps {
 }
 
 export function DemandForecastWidget({ cylinderSizes }: DemandForecastWidgetProps) {
+  const safeCylinderSizes = Array.isArray(cylinderSizes) ? cylinderSizes : []
   const [forecast, setForecast] = useState<ForecastResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedCylinderId, setSelectedCylinderId] = useState<number>(
-    cylinderSizes[0]?.id || 1
+    safeCylinderSizes[0]?.id || 1
   );
 
   const generateForecast = async () => {
@@ -46,7 +47,8 @@ export function DemandForecastWidget({ cylinderSizes }: DemandForecastWidgetProp
     try {
       // Fetch sales data from API
       const salesRes = await fetch('/api/sales');
-      const sales = await salesRes.json();
+      const rawSales = await salesRes.json();
+      const sales = Array.isArray(rawSales) ? rawSales : [];
       
       // Format sales for AI backend
       const formattedSales = sales.map((sale: any) => ({
@@ -77,7 +79,7 @@ export function DemandForecastWidget({ cylinderSizes }: DemandForecastWidgetProp
     }
   };
 
-  const selectedLabel = cylinderSizes.find(c => c.id === selectedCylinderId)?.label || 'Cylinder';
+  const selectedLabel = safeCylinderSizes.find(c => c.id === selectedCylinderId)?.label || 'Cylinder';
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -94,7 +96,7 @@ export function DemandForecastWidget({ cylinderSizes }: DemandForecastWidgetProp
           onChange={(e) => setSelectedCylinderId(Number(e.target.value))}
           className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          {cylinderSizes.map((size) => (
+          {safeCylinderSizes.map((size) => (
             <option key={size.id} value={size.id}>
               {size.label} ({size.kg}kg)
             </option>
@@ -150,7 +152,7 @@ export function DemandForecastWidget({ cylinderSizes }: DemandForecastWidgetProp
           <div className="mt-4">
             <h3 className="font-semibold text-gray-800 mb-2">Forecast for {selectedLabel}:</h3>
             <div className="space-y-2">
-              {forecast.forecast.map((item) => (
+              {(forecast.forecast || []).map((item) => (
                 <div key={item.date} className="bg-blue-50 p-3 rounded border border-blue-200">
                   <div className="flex justify-between">
                     <p className="font-semibold text-blue-900">{item.date}</p>

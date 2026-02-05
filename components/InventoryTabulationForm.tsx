@@ -8,6 +8,7 @@ interface InventoryTabulationFormProps {
 }
 
 export function InventoryTabulationForm({ cylinderSizes, onTabulated }: InventoryTabulationFormProps) {
+  const safeCylinderSizes = Array.isArray(cylinderSizes) ? cylinderSizes : []
   const [inventory, setInventory] = useState<Record<number, { full: number; empty: number }>>({})
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -16,11 +17,11 @@ export function InventoryTabulationForm({ cylinderSizes, onTabulated }: Inventor
   useEffect(() => {
     // Initialize form with all cylinder sizes
     const init: Record<number, { full: number; empty: number }> = {}
-    cylinderSizes.forEach((cs) => {
+    safeCylinderSizes.forEach((cs) => {
       init[cs.id] = { full: 0, empty: 0 }
     })
     setInventory(init)
-  }, [cylinderSizes])
+  }, [safeCylinderSizes])
 
   const handleChange = (cylinderSizeId: number, field: 'full' | 'empty', value: string) => {
     setInventory((prev) => ({
@@ -107,7 +108,7 @@ export function InventoryTabulationForm({ cylinderSizes, onTabulated }: Inventor
             </tr>
           </thead>
           <tbody>
-            {cylinderSizes.map((cs) => (
+            {safeCylinderSizes.map((cs) => (
               <tr key={cs.id} className="border-b border-slate-100 hover:bg-slate-50">
                 <td className="py-3 px-3 font-medium text-slate-900">{cs.label}</td>
                 <td className="py-3 px-3">
@@ -136,7 +137,7 @@ export function InventoryTabulationForm({ cylinderSizes, onTabulated }: Inventor
 
       <button
         type="submit"
-        disabled={loading || cylinderSizes.length === 0}
+        disabled={loading || safeCylinderSizes.length === 0}
         className="w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 disabled:bg-slate-400"
       >
         {loading ? 'Saving Inventory...' : 'Save Inventory Counts'}

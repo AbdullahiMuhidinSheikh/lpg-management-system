@@ -26,19 +26,20 @@ export default function Dashboard() {
     // Load clients
     fetch('/api/clients')
       .then((r) => r.json())
-      .then(setClients)
+      .then((data) => setClients(Array.isArray(data) ? data : []))
       .catch(console.error)
 
     // Load inventory
     fetch('/api/inventory')
       .then((r) => r.json())
       .then((inv) => {
-        setInventory(inv)
+        const safeInv = Array.isArray(inv) ? inv : []
+        setInventory(safeInv)
         // Check if any inventory has 0 stock (not tabulated)
-        const hasUntabulatedInventory = inv.some((i: any) => i.fullStock === 0 && i.emptyStock === 0)
-        setShowTabulationPrompt(hasUntabulatedInventory && inv.length > 0)
+        const hasUntabulatedInventory = safeInv.some((i: any) => i.fullStock === 0 && i.emptyStock === 0)
+        setShowTabulationPrompt(hasUntabulatedInventory && safeInv.length > 0)
         // Extract unique cylinder sizes from inventory
-        const sizes = inv.map((i: any) => i.cylinderSize)
+        const sizes = safeInv.map((i: any) => i.cylinderSize)
         // Remove duplicates by id
         const uniqueSizes = Array.from(new Map(sizes.map((s: any) => [s.id, s])).values()) as CylinderSize[]
         setCylinderSizes(uniqueSizes)
@@ -48,7 +49,7 @@ export default function Dashboard() {
     // Load recent sales
     fetch('/api/sales')
       .then((r) => r.json())
-      .then(setRecentSales)
+      .then((data) => setRecentSales(Array.isArray(data) ? data : []))
       .catch(console.error)
   }, [])
 
@@ -69,7 +70,8 @@ export default function Dashboard() {
     
     // Reload inventory
     const invRes = await fetch('/api/inventory')
-    setInventory(await invRes.json())
+    const invData = await invRes.json()
+    setInventory(Array.isArray(invData) ? invData : [])
   }
 
   const handleExpenseSubmit = async (data: any) => {
@@ -167,7 +169,7 @@ export default function Dashboard() {
                 // Reload inventory
                 fetch('/api/inventory')
                   .then((r) => r.json())
-                  .then(setInventory)
+                  .then((data) => setInventory(Array.isArray(data) ? data : []))
                   .catch(console.error)
               }}
             />
@@ -216,15 +218,15 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-slate-600">Total Sales</span>
-                      <span className="font-medium">KES {eodReport.sales.totalRevenue.toFixed(2)}</span>
+                      <span className="font-medium">KES {(eodReport?.sales?.totalRevenue ?? 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-600">Paid</span>
-                      <span className="font-medium text-green-600">KES {eodReport.sales.paidAmount.toFixed(2)}</span>
+                      <span className="font-medium text-green-600">KES {(eodReport?.sales?.paidAmount ?? 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-600">Unpaid</span>
-                      <span className="font-medium text-red-600">KES {eodReport.sales.unpaidAmount.toFixed(2)}</span>
+                      <span className="font-medium text-red-600">KES {(eodReport?.sales?.unpaidAmount ?? 0).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -234,12 +236,12 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-slate-600">Total Expenses</span>
-                      <span className="font-medium">KES {eodReport.expenses.total.toFixed(2)}</span>
+                      <span className="font-medium">KES {(eodReport?.expenses?.total ?? 0).toFixed(2)}</span>
                     </div>
-                    {Object.entries(eodReport.expenses.breakdown).map(([type, amount]: [string, any]) => (
+                    {Object.entries(eodReport?.expenses?.breakdown ?? {}).map(([type, amount]: [string, any]) => (
                       <div key={type} className="flex justify-between text-sm">
                         <span className="text-slate-600">{type.replace(/_/g, ' ')}</span>
-                        <span>KES {amount.toFixed(2)}</span>
+                        <span>KES {Number(amount || 0).toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -247,7 +249,7 @@ export default function Dashboard() {
 
                 <div className="md:col-span-2 bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-slate-200">
                   <h4 className="font-semibold text-lg mb-4">Net Cash</h4>
-                  <div className="text-4xl font-bold text-green-700">KES {eodReport.netCash.toFixed(2)}</div>
+                  <div className="text-4xl font-bold text-green-700">KES {(eodReport?.netCash ?? 0).toFixed(2)}</div>
                   <p className="text-sm text-slate-600 mt-2">Paid Amount - Total Expenses</p>
                 </div>
               </div>

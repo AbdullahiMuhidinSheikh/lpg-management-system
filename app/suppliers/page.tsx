@@ -20,8 +20,9 @@ export default function SupplierPriceTrends() {
     fetch('/api/purchases')
       .then((r) => r.json())
       .then((data) => {
-        setPurchases(data)
-        calculateStats(data)
+        const safePurchases = Array.isArray(data) ? data : []
+        setPurchases(safePurchases)
+        calculateStats(safePurchases)
         setIsLoading(false)
       })
       .catch((err) => {
@@ -31,6 +32,10 @@ export default function SupplierPriceTrends() {
   }, [])
 
   const calculateStats = (purchases: any[]) => {
+    if (!Array.isArray(purchases)) {
+      setSupplierStats({})
+      return
+    }
     const stats: any = {}
 
     purchases.forEach((p: any) => {

@@ -24,13 +24,13 @@ export default function AdminDashboard() {
     // Get all clients with debt info
     fetch('/api/clients')
       .then((r) => r.json())
-      .then(setClients)
+      .then((data) => setClients(Array.isArray(data) ? data : []))
       .catch(console.error)
 
     // Get purchases for supplier analysis
     fetch('/api/purchases')
       .then((r) => r.json())
-      .then(setPurchases)
+      .then((data) => setPurchases(Array.isArray(data) ? data : []))
       .catch(console.error)
 
     // Get current price per kg
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   }, [])
 
   // Calculate supplier stats
-  const supplierStats = purchases.reduce((acc: any, p: any) => {
+  const supplierStats = (Array.isArray(purchases) ? purchases : []).reduce((acc: any, p: any) => {
     if (!acc[p.supplier.name]) {
       acc[p.supplier.name] = { count: 0, totalCost: 0, avgPrice: 0, lastPurchase: p.createdAt }
     }
@@ -58,7 +58,8 @@ export default function AdminDashboard() {
     fetch('/api/inventory')
       .then((r) => r.json())
       .then((inv) => {
-        const low = inv.filter((i: any) => i.fullStock < 20)
+        const safeInv = Array.isArray(inv) ? inv : []
+        const low = safeInv.filter((i: any) => i.fullStock < 20)
         setInventory(low)
       })
       .catch(console.error)
@@ -130,20 +131,20 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-white p-6 rounded-lg border border-slate-200">
               <p className="text-slate-600 text-sm font-medium">Today's Revenue</p>
-              <p className="text-3xl font-bold text-slate-900 mt-2">KES {metrics?.sales.totalRevenue.toFixed(2) || 0}</p>
+              <p className="text-3xl font-bold text-slate-900 mt-2">KES {(metrics?.sales?.totalRevenue ?? 0).toFixed(2)}</p>
             </div>
             <div className="bg-white p-6 rounded-lg border border-slate-200">
               <p className="text-slate-600 text-sm font-medium">Paid Amount</p>
-              <p className="text-3xl font-bold text-green-600 mt-2">KES {metrics?.sales.paidAmount.toFixed(2) || 0}</p>
+              <p className="text-3xl font-bold text-green-600 mt-2">KES {(metrics?.sales?.paidAmount ?? 0).toFixed(2)}</p>
             </div>
             <div className="bg-white p-6 rounded-lg border border-slate-200">
               <p className="text-slate-600 text-sm font-medium">Total Expenses</p>
-              <p className="text-3xl font-bold text-orange-600 mt-2">KES {metrics?.expenses.total.toFixed(2) || 0}</p>
+              <p className="text-3xl font-bold text-orange-600 mt-2">KES {(metrics?.expenses?.total ?? 0).toFixed(2)}</p>
             </div>
 
             <div className="md:col-span-3 bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg border border-blue-200">
               <p className="text-slate-600 text-sm font-medium">Net Cash (Today)</p>
-              <p className="text-4xl font-bold text-blue-700 mt-2">KES {metrics?.netCash.toFixed(2) || 0}</p>
+              <p className="text-4xl font-bold text-blue-700 mt-2">KES {(metrics?.netCash ?? 0).toFixed(2)}</p>
             </div>
           </div>
         )}

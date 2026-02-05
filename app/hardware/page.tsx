@@ -20,9 +20,10 @@ export default function HardwareTracking() {
     try {
       const res = await fetch('/api/hardware')
       const data = await res.json()
-      setHardware(data)
+      setHardware(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error(err)
+      setHardware([])
     } finally {
       setIsLoading(false)
     }
@@ -32,9 +33,10 @@ export default function HardwareTracking() {
     try {
       const res = await fetch('/api/products')
       const data = await res.json()
-      setProducts(data)
+      setProducts(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error(err)
+      setProducts([])
     }
   }
 

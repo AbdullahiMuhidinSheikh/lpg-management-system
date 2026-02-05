@@ -16,12 +16,14 @@ interface TableProps {
 }
 
 export function Table({ columns, data, className = '', emptyMessage = 'No data' }: TableProps) {
+  const safeColumns = Array.isArray(columns) ? columns : []
+  const safeData = Array.isArray(data) ? data : []
   return (
     <div className={`overflow-x-auto border border-slate-200 rounded-lg ${className}`}>
       <table className="w-full text-sm">
         <thead className="bg-slate-100 border-b border-slate-200">
           <tr>
-            {columns.map((col) => (
+            {safeColumns.map((col) => (
               <th
                 key={col.accessKey}
                 className="px-4 py-3 text-left font-semibold text-slate-700"
@@ -32,16 +34,16 @@ export function Table({ columns, data, className = '', emptyMessage = 'No data' 
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
+          {safeData.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-6 text-center text-slate-500">
+              <td colSpan={safeColumns.length || 1} className="px-4 py-6 text-center text-slate-500">
                 {emptyMessage}
               </td>
             </tr>
           ) : (
-            data.map((row, idx) => (
+            safeData.map((row, idx) => (
               <tr key={idx} className="border-b border-slate-200 hover:bg-slate-50">
-                {columns.map((col) => (
+                {safeColumns.map((col) => (
                   <td key={col.accessKey} className="px-4 py-3 text-slate-800">
                     {col.render ? col.render(row[col.accessKey], row) : row[col.accessKey]}
                   </td>

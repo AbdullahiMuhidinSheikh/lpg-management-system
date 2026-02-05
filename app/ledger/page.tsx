@@ -14,7 +14,8 @@ export default function CylinderLedger() {
     fetch('/api/clients')
       .then((r) => r.json())
       .then((cs) => {
-        setClients(cs.filter((c: any) => c.type === 'RETAIL'))
+        const safeClients = Array.isArray(cs) ? cs : []
+        setClients(safeClients.filter((c: any) => c.type === 'RETAIL'))
       })
       .catch(console.error)
   }, [])
@@ -77,7 +78,7 @@ export default function CylinderLedger() {
           <div className="lg:col-span-1 bg-white p-6 rounded-lg border border-slate-200">
             <h3 className="text-lg font-semibold mb-4">Retail Clients</h3>
             <div className="space-y-2 max-h-96 overflow-y-auto">
-              {clients.map((c: any) => (
+              {(Array.isArray(clients) ? clients : []).map((c: any) => (
                 <button
                   key={c.id}
                   onClick={() => handleSelectClient(c.id)}
@@ -110,7 +111,7 @@ export default function CylinderLedger() {
                     </div>
                     <div>
                       <p className="text-slate-600 text-sm">Money Owed</p>
-                      <p className="text-2xl font-bold text-orange-600">KES {selectedClient.totalOwedAmount.toFixed(2)}</p>
+                      <p className="text-2xl font-bold text-orange-600">KES {Number(selectedClient?.totalOwedAmount ?? 0).toFixed(2)}</p>
                     </div>
                     <div>
                       <p className="text-slate-600 text-sm">Delivery Status</p>
@@ -138,7 +139,7 @@ export default function CylinderLedger() {
                         }
                       }
                     ]}
-                    data={selectedClient.cylinderDebts}
+                    data={Array.isArray(selectedClient?.cylinderDebts) ? selectedClient.cylinderDebts : []}
                     emptyMessage="No cylinder history"
                   />
                 </div>
@@ -163,7 +164,7 @@ export default function CylinderLedger() {
                         className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
                       >
                         <option value="">-- Select --</option>
-                        {selectedClient.cylinderDebts.map((d: any) => (
+                        {(Array.isArray(selectedClient?.cylinderDebts) ? selectedClient.cylinderDebts : []).map((d: any) => (
                           <option key={d.cylinderSizeId} value={d.cylinderSizeId}>
                             {d.cylinderSize?.label}
                           </option>
@@ -209,7 +210,7 @@ export default function CylinderLedger() {
                         render: (val) => new Date(val).toLocaleDateString()
                       }
                     ]}
-                    data={selectedClient.sales}
+                    data={Array.isArray(selectedClient?.sales) ? selectedClient.sales : []}
                     emptyMessage="No sales"
                   />
                 </div>
