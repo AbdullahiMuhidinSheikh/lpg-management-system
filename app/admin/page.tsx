@@ -5,8 +5,8 @@ import { Table } from '@/components/Table'
 
 export default function AdminDashboard() {
   const [metrics, setMetrics] = useState<any>(null)
-  const [clients, setClients] = useState([])
-  const [purchases, setPurchases] = useState([])
+  const [clients, setClients] = useState<any[]>([])
+  const [purchases, setPurchases] = useState<any[]>([])
   const [suppliers, setSuppliers] = useState<any[]>([])
   const [activeTab, setActiveTab] = useState('metrics')
   const [currentRate, setCurrentRate] = useState<any>(null)
