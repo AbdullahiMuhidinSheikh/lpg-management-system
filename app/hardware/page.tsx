@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { Table } from '@/components/Table'
 
 export default function HardwareTracking() {
-  const [hardware, setHardware] = useState([])
-  const [products, setProducts] = useState([])
+  const [hardware, setHardware] = useState<any[]>([])
+  const [products, setProducts] = useState<any[]>([])
   const [activeTab, setActiveTab] = useState('all')
   const [newHardwareForm, setNewHardwareForm] = useState({ serial: '', productId: '', status: 'IN_STOCK' })
   const [message, setMessage] = useState('')
