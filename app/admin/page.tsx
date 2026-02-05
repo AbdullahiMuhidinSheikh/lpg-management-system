@@ -205,7 +205,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-amber-800">Clients with Debt</span>
-                  <span className="font-bold text-amber-900">{clients.filter((c: any) => c.totalOwedCylinders > 0).length}</span>
+                  <span className="font-bold text-amber-900">{(Array.isArray(clients) ? clients : []).filter((c: any) => c.totalOwedCylinders > 0).length}</span>
                 </div>
               </div>
             </div>

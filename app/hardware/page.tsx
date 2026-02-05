@@ -69,17 +69,18 @@ export default function HardwareTracking() {
     }
   }
 
-  const filteredHardware = hardware.filter((h: any) => {
+  const safeHardware = Array.isArray(hardware) ? hardware : []
+  const filteredHardware = safeHardware.filter((h: any) => {
     if (activeTab === 'all') return true
     return h.status === activeTab
   })
 
   const stats = {
-    total: hardware.length,
-    inStock: hardware.filter((h: any) => h.status === 'IN_STOCK').length,
-    assigned: hardware.filter((h: any) => h.status === 'ASSIGNED').length,
-    lost: hardware.filter((h: any) => h.status === 'LOST').length,
-    maintenance: hardware.filter((h: any) => h.status === 'MAINTENANCE').length
+    total: safeHardware.length,
+    inStock: safeHardware.filter((h: any) => h.status === 'IN_STOCK').length,
+    assigned: safeHardware.filter((h: any) => h.status === 'ASSIGNED').length,
+    lost: safeHardware.filter((h: any) => h.status === 'LOST').length,
+    maintenance: safeHardware.filter((h: any) => h.status === 'MAINTENANCE').length
   }
 
   return (
