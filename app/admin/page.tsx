@@ -53,7 +53,7 @@ export default function AdminDashboard() {
   }, {})
 
   // Find low inventory items
-  const [inventory, setInventory] = useState([])
+  const [inventory, setInventory] = useState<any[]>([])
   useEffect(() => {
     fetch('/api/inventory')
       .then((r) => r.json())
