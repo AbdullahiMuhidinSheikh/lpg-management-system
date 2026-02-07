@@ -12,7 +12,7 @@ interface SupplierStats {
 }
 
 export default function SupplierPriceTrends() {
-  const [purchases, setPurchases] = useState([])
+  const [purchases, setPurchases] = useState<any[]>([])
   const [supplierStats, setSupplierStats] = useState<Record<string, SupplierStats>>({})
   const [isLoading, setIsLoading] = useState(true)
 

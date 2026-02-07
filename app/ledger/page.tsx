@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Table } from '@/components/Table'
 
 export default function CylinderLedger() {
-  const [clients, setClients] = useState([])
+  const [clients, setClients] = useState<any[]>([])
   const [selectedClient, setSelectedClient] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [emptyReturnForm, setEmptyReturnForm] = useState({ cylinderSizeId: '', quantity: 1 })
@@ -82,11 +82,10 @@ export default function CylinderLedger() {
                 <button
                   key={c.id}
                   onClick={() => handleSelectClient(c.id)}
-                  className={`w-full text-left px-4 py-2 rounded transition ${
-                    selectedClient?.id === c.id
+                  className={`w-full text-left px-4 py-2 rounded transition ${selectedClient?.id === c.id
                       ? 'bg-blue-600 text-white'
                       : 'bg-slate-100 text-slate-800 hover:bg-slate-200'
-                  }`}
+                    }`}
                 >
                   {c.name}
                   {c.totalOwedCylinders > 0 && <span className="text-xs ml-2">({c.totalOwedCylinders})</span>}
