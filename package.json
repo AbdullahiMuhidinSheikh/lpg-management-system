@@ -4,15 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && prisma db push && next build",
     "start": "next start",
-    "prisma:migrate": "prisma migrate dev",
+    "setup": "prisma generate && prisma db push && prisma db seed",
+    "prisma:push": "prisma db push",
     "prisma:generate": "prisma generate",
-    "seed": "ts-node --esm prisma/seed.ts",
+    "prisma:seed": "prisma db seed",
+    "prisma:studio": "prisma studio",
+    "test:connection": "node test-connection.js",
     "test:workflows": "node test-workflows.js"
   },
   "prisma": {
-    "seed": "node --loader ts-node/esm prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "5.8.0",
